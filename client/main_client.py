@@ -1,8 +1,10 @@
 import json
 import re
+from datetime import datetime
 
 from bs4 import BeautifulSoup
 from client.thecamp_client import TheCampClient
+from data.soldier import Soldier
 from utils.utils import split_content_if_needed
 
 
@@ -97,6 +99,44 @@ class MainClient(TheCampClient):
                 continue
 
         return cafe_table
+
+    def get_soldier_data(self):
+        endpoint = '/eduUnitCafe/viewEduUnitCafeMain.do'
+        data = {}
+        result = self._post(endpoint, data)
+        soup = BeautifulSoup(result, 'html.parser')
+
+        solder_data = []
+
+        cafes = soup.select('.cafe-card-box')
+        for cafe in cafes:
+            name_div = cafe.select('.profile-wrap .id span')[0]
+            name = name_div.text.split()[0]
+
+            days_info_div = cafe.select('.profile-wrap .cafe-sh-date span')
+            entrance_day_div = days_info_div[0].select('em')[0]
+            entrance_day = datetime.strptime(entrance_day_div.text.strip(), "%Y.%M.%d")
+
+            if len(days_info_div) == 1:
+                solder_data.append(Soldier(name, entrance_day, is_cafe_entranced=False))
+                continue
+
+            complete_day_div = days_info_div[1].select('em')[0]
+            complete_day = datetime.strptime(complete_day_div.text.strip(), "%Y.%M.%d")
+
+            edu_seq, train_unit_code = None, None
+            buttons = cafe.select('.btn-wrap')[0].find_all('a')
+
+            for button in buttons:
+                if button.text == '위문편지':
+                    regex = re.compile('\'\d+\'')
+                    codes = regex.findall(button['href'])
+
+                    edu_seq, train_unit_code = map(lambda x: int(x[1:-1]), codes)
+                    break
+
+            solder_data.append(Soldier(name, entrance_day, complete_day, edu_seq, train_unit_code))
+        return solder_data
 
     def _get_mgr_seq(self, edu_seq, train_unit_code):
         endpoint = '/consolLetter/viewConsolLetterMain.do'
