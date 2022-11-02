@@ -12,34 +12,6 @@ class MainClient(TheCampClient):
     def __init__(self, session):
         super().__init__(session)
 
-    def add_soldier(self, group, name, birth, enter_date, train_unit, relation, phone=''):
-        recruit_code = '0000490001'
-
-        group_code = self.get_group_code(group)
-        train_unit_code = self.get_train_unit_table(group)[train_unit]
-        relation_code = self.get_relation_code(relation)
-
-        endpoint = '/missSoldier/insertDirectMissSoldierA.do'
-        data = {
-            'missSoldierClassCd': recruit_code,
-            'grpCd': group_code,
-            'name': name,
-            'birth': birth,
-            'enterDate': enter_date,
-            'trainUnitCd': train_unit_code,
-            'phoneNo': phone,
-            'missSoldierRelationshipCd': relation_code
-        }
-
-        result = self._post(endpoint, data)
-        result = json.loads(result, encoding='utf-8')
-
-        if 'resultCd' in result and result['resultCd'] == '0000':
-            print(f'Successfully Registered! [{name}]')
-            return True
-        print(f'Register failed. [{result["resultMsg"] if "resultMsg" in result else "Unknown Error"}]')
-        return False
-
     def send_letter(self, name, title, content):
         cafes = self.get_cafes()
         if name not in cafes:
@@ -191,3 +163,39 @@ class MainClient(TheCampClient):
         if relation_name not in relation_code_table:
             return ''
         return relation_code_table[relation_name]
+
+    # birth/enter_date format: YYYY-MM-DD
+    def add_train_unit(self, name, birth, enter_date):
+        endpoint = '/missSoldier/insertDirectMissSoldierA.do'
+        data = {
+            'iuid': '890946',  # ????
+            'missSoldierClassCdNm': '예비군인/훈련병',
+            'grpCdNm': '육군',
+            'missSoldierClassCd': '0000490001',
+            'grpCd': '0000010001',
+            'name': name,
+            'birth': birth,
+            'trainUnitCd': '20020191700',
+            'enterDate': enter_date,
+            'missSoldierRelationshipCd': '0000420006',
+            'countryCode': '39|+82',
+        }
+        self._post(endpoint, data)
+
+    # reg_order는 훈련병이 저장된 순서를 받아오는데, 반드시 넣어야 하는지는 확인이 필요함
+    # birth/enter_date format: YYYYMMDD
+    def join_cafe(self, reg_order, name, birth, enter_date):
+        endpoint = '/main/cafeCreateCheckA.do'
+        data = {
+            'regOrder': reg_order,
+            'name': name,
+            'birth': birth,
+            'enterDate': enter_date,
+            'trainUnitCd': '20020191700',
+            'trainUnitTypeCd': '0000140001',
+            'grpCd': '0000010001',
+            'traineeRelationshipCd': '0000420006',
+        }
+        result = self._post(endpoint, data)
+        result = json.loads(result)
+        return result
