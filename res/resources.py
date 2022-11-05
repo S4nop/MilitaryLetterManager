@@ -1,8 +1,11 @@
 color_primary = '#00AFB0'
-color_background = '#FFFFFF'
+color_background = '#007D7D'
+color_white = '#FFFFFF'
 color_soldier_card_title = '#000000'
 color_soldier_card_text = '#565656'
 
 img_add = './res/img/add.png'
 img_card_view_bg = './res/img/card_view_bg.png'
 img_army_picture = './res/img/army_picture.png'
+img_listview_shadow = './res/img/listview_shadow.png'
+img_exit = './res/img/exit.png'
