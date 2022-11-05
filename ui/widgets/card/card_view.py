@@ -1,8 +1,10 @@
 from abc import abstractmethod
 
 from PyQt5.QtCore import QSize
-from PyQt5.QtGui import QMouseEvent
+from PyQt5.QtGui import QMouseEvent, QPixmap
 from PyQt5.QtWidgets import QWidget, QLabel
+
+from res import resources
 
 
 class CardView(QWidget):
@@ -19,7 +21,7 @@ class CardView(QWidget):
         self._background = QLabel("", self)
         self._background.move(0, 0)
         self._background.resize(self.WIDTH_SIZE, self.HEIGHT_SIZE)
-        self._background.setStyleSheet('background-image: url("./res/img/card_view_bg.png");')
+        self._background.setPixmap(QPixmap(resources.img_card_view_bg))
         self.setFixedSize(self.WIDTH_SIZE, self.HEIGHT_SIZE)
 
     def sizeHint(self) -> QSize:
