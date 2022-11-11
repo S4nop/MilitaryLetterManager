@@ -70,7 +70,7 @@ class AddSoldierDialog(QMainWindow):
 
         self.add_btn = QPushButton("Add")
         self.add_btn.setFont(QFont('a꾸러기'))
-        self.btn.setStyleSheet('Color: {}'.format(resources.color_primary))
+        self.add_btn.setStyleSheet('Color: {}'.format(resources.color_primary))
         self.add_btn.clicked.connect(self.add)
 
         layout_left = QVBoxLayout(self.left_widget)
