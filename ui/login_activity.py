@@ -15,7 +15,7 @@ from utils.utils import move_window_to_center
 
 class LoginActivity(QMainWindow):
     WINDOW_WIDTH = 400
-    WINDOW_HEIGHT = 400
+    WINDOW_HEIGHT = 380
 
     def __init__(self):
         super().__init__()
@@ -36,23 +36,36 @@ class LoginActivity(QMainWindow):
         self.title.move(0, 50)
         self.title.setStyleSheet('Color: {}'.format(resources.color_primary))
 
-        self.id_input = QLineEdit("", self)
-        self.id_input.resize(300, 40)
+        self.id_input = StyledLineEdit(self)
+        self.id_input.resize(300, 44)
         self.id_input.move(50, 140)
-        self.id_input.setStyleSheet('background-color: {}; border-radius: 4px; border: 1px solid {}'
-                                    .format(resources.color_white, resources.color_text_field_border))
 
-        self.pw_input = QLineEdit("", self)
-        self.pw_input.resize(300, 40)
+        self.pw_input = StyledLineEdit(self)
+        self.pw_input.setEchoMode(QLineEdit.Password)
+        self.pw_input.resize(300, 44)
         self.pw_input.move(50, 190)
-        self.pw_input.setStyleSheet('background-color: {}; border-radius: 4px; border: 1px solid {}'
-                                    .format(resources.color_white, resources.color_text_field_border))
 
         self.login_button = StyledButton(self)
         self.login_button.set_text('Login')
         self.login_button.set_on_click(self.login)
         self.login_button.resize(300, 44)
         self.login_button.move(50, 250)
+
+        self.stay_login = QCheckBox("Stay Signed in", self)
+        self.stay_login.move(50, 290)
+        self.stay_login.setFont(QFont('Roboto', 10))
+        self.stay_login.setStyleSheet('QCheckBox { background-color: rgba(0, 0, 0, 0); Color: #575757; } ')
+        self.stay_login.stateChanged.connect(self.__on_stay_login_state_changed)
+
+        self.close_button = QLabel(self)
+        self.close_button.setPixmap(QPixmap(resources.img_close))
+        self.close_button.setScaledContents(True)
+        self.close_button.resize(30, 30)
+        self.close_button.move(360, 10)
+        self.close_button.mouseReleaseEvent = self.close
+
+    def __on_stay_login_state_changed(self):
+        print(self.stay_login.isChecked())
 
     def login(self):
         ID = self.id_input.text()
