@@ -61,7 +61,7 @@ class MainActivity(QMainWindow):
         self.list_widget.resize(1100, 340)
         self.list_widget.move(40, 40)
         self.list_widget.setFlow(QListView.LeftToRight)
-        self.list_widget.setStyleSheet('background-color: {}; border: 0px'.format(resources.color_background))
+        self.list_widget.setStyleSheet('background-color: {}; border: 0px'.format(resources.color_main_bg))
         self.list_widget.horizontalScrollBar().setStyleSheet('height: 0px')
         self.list_widget.setHorizontalScrollMode(QAbstractItemView.ScrollPerPixel)
         self.list_widget.setSpacing(20)
@@ -104,7 +104,7 @@ class MainActivity(QMainWindow):
         self.bg_top.setAlignment(Qt.AlignHCenter)
         self.bg_top.resize(self.WINDOW_WIDTH, 420)
         self.bg_top.move(0, 0)
-        self.bg_top.setStyleSheet('background-color: {}'.format(resources.color_background))
+        self.bg_top.setStyleSheet('background-color: {}'.format(resources.color_main_bg))
 
         self.bg_bottom = QLabel(self)
         self.bg_bottom.setAlignment(Qt.AlignHCenter)

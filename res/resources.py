@@ -1,5 +1,5 @@
 color_primary = '#00AFB0'
-color_background = '#007D7D'
+color_main_bg = '#007D7D'
 color_white = '#FFFFFF'
 color_soldier_card_title = '#000000'
 color_soldier_card_text = '#565656'
