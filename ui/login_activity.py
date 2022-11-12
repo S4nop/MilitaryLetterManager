@@ -1,12 +1,8 @@
-import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import Qt 
 from PyQt5.QtGui import QFont
-from PyQt5.QtGui import QFontDatabase
-
-from PyQt5 import QtGui
-from PyQt5.QtWidgets import QMainWindow, QPushButton
+from PyQt5.QtWidgets import QMainWindow
 
 from res import resources
 from ui.widgets.styled_button import StyledButton
@@ -68,6 +64,6 @@ class LoginActivity(QMainWindow):
         print(self.stay_login.isChecked())
 
     def login(self):
-        ID = self.id_input.text()
-        PW = self.pw_input.text()
+        user_id = self.id_input.text()
+        pw = self.pw_input.text()
         self.close()
