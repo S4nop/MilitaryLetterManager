@@ -10,6 +10,7 @@ from manager.thecamp_session_manager import TheCampSessionManager
 from res import resources
 from ui.widgets.card.add_action_card import AddActionCard
 from ui.widgets.card.soldier_card import SoldierCard
+from utils.utils import move_window_to_center
 from viewmodel.soldier_list_viewmodel import SoldierListViewModel
 
 
@@ -34,7 +35,7 @@ class MainActivity(QMainWindow):
         self.setWindowFlag(Qt.FramelessWindowHint)
         self.__init_background()
         self.__init_list_view()
-        self.__move_window_to_center()
+        move_window_to_center(self)
 
     def __init_client(self):
         session = TheCampSessionManager.get_instance().get_session()
@@ -49,12 +50,6 @@ class MainActivity(QMainWindow):
 
     def __update_soldier_list(self):
         self.solder_list_viewmodel.solder_list = self.main_client.get_soldier_data()
-
-    def __move_window_to_center(self):
-        qr = self.frameGeometry()
-        cp = QDesktopWidget().availableGeometry().center()
-        qr.moveCenter(cp)
-        self.move(qr.topLeft())
 
     def __init_list_view(self):
         self.list_widget = QListWidget(self)
