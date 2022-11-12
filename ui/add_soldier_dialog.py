@@ -53,31 +53,38 @@ class AddSoldierDialog(QMainWindow):
 
         self.SoldierImage = QLabel(self)
         self.SoldierImage.setPixmap(QPixmap(resources.img_army_picture))
-        self.SoldierImage.resize(self.DIALOG_WIDTH / 2, 160)
+        self.SoldierImage.resize(self.DIALOG_WIDTH / 2, 170)
         self.SoldierImage.move(0, 80)
         self.SoldierImage.setAlignment(Qt.AlignCenter)
 
         self.NameInput = StyledLineEdit(self)
         self.NameInput.resize(180, 32)
-        self.NameInput.move(int(self.DIALOG_WIDTH / 2) + 10, 30)
+        self.NameInput.move(int(self.DIALOG_WIDTH / 2) + 10, 34)
         self.NameInput.setPlaceholderText("성명")
 
         self.EnlistDayInput = StyledLineEdit(self)
         self.EnlistDayInput.resize(180, 32)
-        self.EnlistDayInput.move(int(self.DIALOG_WIDTH / 2) + 10, 80)
+        self.EnlistDayInput.move(int(self.DIALOG_WIDTH / 2) + 10, 84)
         self.EnlistDayInput.setPlaceholderText("입영일(YYYY-MM-DD)")
 
         self.BDayInput = StyledLineEdit(self)
         self.BDayInput.resize(180, 32)
-        self.BDayInput.move(int(self.DIALOG_WIDTH / 2) + 10, 130)
+        self.BDayInput.move(int(self.DIALOG_WIDTH / 2) + 10, 134)
         self.BDayInput.setPlaceholderText("생일(YYYY-MM-DD)")
 
         self.add_btn = StyledButton(self)
         self.add_btn.setText('Add')
         self.add_btn.resize(180, 40)
-        self.add_btn.move(int(self.DIALOG_WIDTH / 2) + 10, 190)
+        self.add_btn.move(int(self.DIALOG_WIDTH / 2) + 10, 194)
         self.add_btn.set_font_size(12)
         self.add_btn.set_on_click(self.add)
+
+        self.close_button = QLabel(self)
+        self.close_button.setPixmap(QPixmap(resources.img_close))
+        self.close_button.setScaledContents(True)
+        self.close_button.resize(30, 30)
+        self.close_button.move(370, 0)
+        self.close_button.mouseReleaseEvent = self.close
 
 
     def add(self):
