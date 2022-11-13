@@ -1,5 +1,7 @@
 from configparser import ConfigParser
 
+from utils.crypto_utils import encrypt, decrypt
+
 
 class ConfigHelper:
     @staticmethod
@@ -8,9 +10,10 @@ class ConfigHelper:
 
     @staticmethod
     def set_auto_login(id_, password):
+        encrypted_pw = encrypt(password)
         config = ConfigParser()
         config.read('config.ini')
-        config['AUTOLOGIN'] = {'auto_login': 'True', 'id': id_, 'password': password}
+        config['AUTOLOGIN'] = {'auto_login': 'True', 'id': id_, 'password': encrypted_pw}
         config.write(open('config.ini', 'w'))
 
     @staticmethod
@@ -24,6 +27,7 @@ class ConfigHelper:
         config = ConfigParser()
         config.read('config.ini')
         if config['AUTOLOGIN']['auto_login'] == 'True':
-            return True, config['AUTOLOGIN']['id'], config['AUTOLOGIN']['password']
+            decrypted_pw = decrypt(config['AUTOLOGIN']['password'])
+            return True, config['AUTOLOGIN']['id'], decrypted_pw
         else:
             return False, None, None
