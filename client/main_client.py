@@ -87,14 +87,14 @@ class MainClient(TheCampClient):
 
             days_info_div = cafe.select('.profile-wrap .cafe-sh-date span')
             entrance_day_div = days_info_div[0].select('em')[0]
-            entrance_day = datetime.strptime(entrance_day_div.text.strip(), "%Y.%M.%d")
+            entrance_day = datetime.strptime(entrance_day_div.text.strip(), "%Y.%m.%d")
 
             if len(days_info_div) == 1:
                 solder_data.append(Soldier(name, entrance_day, is_cafe_entranced=False))
                 continue
 
             complete_day_div = days_info_div[1].select('em')[0]
-            complete_day = datetime.strptime(complete_day_div.text.strip(), "%Y.%M.%d")
+            complete_day = datetime.strptime(complete_day_div.text.strip(), "%Y.%m.%d")
 
             edu_seq, train_unit_code = None, None
             buttons = cafe.select('.btn-wrap')[0].find_all('a')

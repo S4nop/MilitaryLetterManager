@@ -1,4 +1,6 @@
 import time
+import threading
+from datetime import datetime
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QPixmap
@@ -26,7 +28,7 @@ class MainActivity(QMainWindow):
         self.__init_ui()
         self.__init_client()
         self.__init_viewmodel()
-        self.__update_list_items(None)
+        self.__update_list_items(self.main_client.get_soldier_data())
         self.__draw_exit_button()
         self.show()
 
@@ -76,8 +78,9 @@ class MainActivity(QMainWindow):
         self.exit_button.resize(150, 150)
         self.exit_button.mousePressEvent = lambda _: self.__fade_out_exit()
 
-    def __update_list_items(self, soldier_list):
-        if soldier_list is None:
+    def __update_list_items(self, soldier_data):
+        soldier_list = []
+        if soldier_data is None:
             soldier_list = [
                 SoldierCard(self, '3', '우지은'),
                 SoldierCard(self, '13', '류성희'),
@@ -85,6 +88,11 @@ class MainActivity(QMainWindow):
                 SoldierCard(self, '33', '윤상원'),
                 SoldierCard(self, '43', '김민수'),
             ]
+        else:
+            for soldier in soldier_data:
+                date_diff = datetime.now() - soldier.entrance_date
+                print(soldier.complete_date, soldier.entrance_date, date_diff)
+                soldier_list.append(SoldierCard(self, str(date_diff.days), soldier.name))
         soldier_list.append(AddActionCard(self))
 
         self.list_widget.clear()
@@ -93,6 +101,14 @@ class MainActivity(QMainWindow):
             self.list_widget.addItem(list_item)
             self.list_widget.setItemWidget(list_item, soldier_item)
             list_item.setSizeHint(soldier_item.sizeHint())
+
+    #     time.sleep(300)
+    #
+    # def __update_thread(self):
+    #     soldier_data = self.main_client.get_soldier_data()
+    #     thread = threading.Thread(target=self.__update_list_items(soldier_data))
+    #     thread.daemon = True
+    #     thread.start()
 
     def __init_background(self):
         self.bg_top = QLabel(self)
