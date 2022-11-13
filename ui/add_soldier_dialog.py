@@ -4,9 +4,11 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 
 from res import resources
+from client.main_client import MainClient
 from ui.widgets.styled_button import StyledButton
 from ui.widgets.styled_text_field import StyledLineEdit
 from utils.utils import move_window_to_center
+from manager.thecamp_session_manager import TheCampSessionManager
 
 
 class AddSoldierDialog(QDialog):
@@ -56,10 +58,10 @@ class AddSoldierDialog(QDialog):
         self.name_input.move(int(self.DIALOG_WIDTH / 2) + 10, 34)
         self.name_input.setPlaceholderText("성명")
 
-        self.enlist_day_input = StyledLineEdit(self)
-        self.enlist_day_input.resize(180, 32)
-        self.enlist_day_input.move(int(self.DIALOG_WIDTH / 2) + 10, 84)
-        self.enlist_day_input.setPlaceholderText("입영일(YYYY-MM-DD)")
+        self.enter_day_input = StyledLineEdit(self)
+        self.enter_day_input.resize(180, 32)
+        self.enter_day_input.move(int(self.DIALOG_WIDTH / 2) + 10, 84)
+        self.enter_day_input.setPlaceholderText("입영일(YYYY-MM-DD)")
 
         self.birthday_input = StyledLineEdit(self)
         self.birthday_input.resize(180, 32)
@@ -85,7 +87,12 @@ class AddSoldierDialog(QDialog):
 
     def add_soldier(self):
         name = self.name_input.text()
-        enlist_day = self.enlist_day_input.text()
+        enter_date = self.enter_day_input.text()
         birth = self.birthday_input.text()
+
+        session = TheCampSessionManager().get_instance().get_session()
+        main_client = MainClient(session)
+        main_client.add_train_unit(name, birth, enter_date)
+        main_client.join_cafe(name, birth.replace('-', ''), enter_date.replace('-', ''))
         
         self.close()
