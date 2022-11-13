@@ -164,11 +164,18 @@ class MainClient(TheCampClient):
             return ''
         return relation_code_table[relation_name]
 
+    def __get_iuid(self):
+        endpoint = '/missSoldier/viewMissSoldierSearch.do'
+        result = self._post(endpoint, {})
+        soup = BeautifulSoup(result, 'html.parser')
+        return soup.select('#mainForm input')[0].get('value')
+
     # birth/enter_date format: YYYY-MM-DD
     def add_train_unit(self, name, birth, enter_date):
         endpoint = '/missSoldier/insertDirectMissSoldierA.do'
+        iuid = self.__get_iuid()
         data = {
-            'iuid': '890946',  # ????
+            'iuid': iuid,
             'missSoldierClassCdNm': '예비군인/훈련병',
             'grpCdNm': '육군',
             'missSoldierClassCd': '0000490001',
@@ -182,10 +189,16 @@ class MainClient(TheCampClient):
         }
         self._post(endpoint, data)
 
-    # reg_order는 훈련병이 저장된 순서를 받아오는데, 반드시 넣어야 하는지는 확인이 필요함
+    def __get_reg_order(self):
+        endpoint = '/missSoldier/viewMissSoldierRegList.do'
+        result = self._post(endpoint, {})
+        soup = BeautifulSoup(result, 'html.parser')
+        return len(soup.select('.profile-info-list'))
+
     # birth/enter_date format: YYYYMMDD
-    def join_cafe(self, reg_order, name, birth, enter_date):
+    def join_cafe(self, name, birth, enter_date):
         endpoint = '/main/cafeCreateCheckA.do'
+        reg_order = self.__get_reg_order()
         data = {
             'regOrder': reg_order,
             'name': name,
