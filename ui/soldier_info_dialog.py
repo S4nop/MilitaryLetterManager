@@ -3,6 +3,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import Qt 
 from PyQt5.QtGui import QFont
 
+from data.news_choice import NewsChoice
 from data.soldier_letter_info import SoldierLetterInfo
 from res import resources
 from ui.widgets.shadow_rect_widget import ShadowRectFrame
@@ -154,5 +155,19 @@ class SoldierInfoDialog(QDialog):
         layout_bottom.setSpacing(12)
 
     def on_click_close(self):
-        self.on_closed()
+        news_choice = NewsChoice()
+        if self.worlds.isChecked():
+            news_choice.set_world_flag()
+        if self.politics.isChecked():
+            news_choice.set_politic_flag()
+        if self.economy.isChecked():
+            news_choice.set_economy_flag()
+        if self.society.isChecked():
+            news_choice.set_society_flag()
+        if self.culture.isChecked():
+            news_choice.set_lifeculture_flag()
+        if self.it_science.isChecked():
+            news_choice.set_itscience_flag()
+
+        self.on_closed(news_choice)
         self.close()

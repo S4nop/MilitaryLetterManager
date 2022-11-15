@@ -12,6 +12,7 @@ class MainClient(TheCampClient):
     def __init__(self, session):
         super().__init__(session)
 
+    # 우리 PK는 edu_seq인데.. 여긴 name.. 레거시..
     def send_letter(self, name, title, content):
         cafes = self.get_cafes()
         if name not in cafes:

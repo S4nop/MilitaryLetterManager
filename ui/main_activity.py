@@ -8,9 +8,17 @@ from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QLabel, QListWidget, QL
     QAbstractItemView
 
 from client.main_client import MainClient
+from data.news_choice import NewsChoice
+from data.soldier import Soldier
+from database.database_repository import DatabaseRepository
+from helper.news_crawl_helper import NaverNewsType, get_naver_news_titles
+from manager.schedule_manager import ScheduleManager
 from manager.thecamp_session_manager import TheCampSessionManager
 from res import resources
+from ui.add_soldier_dialog import AddSoldierDialog
+from ui.soldier_info_dialog import SoldierInfoDialog
 from ui.widgets.card.add_action_card import AddActionCard
+from ui.widgets.card.card_view import CardView
 from ui.widgets.card.soldier_card import SoldierCard
 from utils.utils import move_window_to_center
 from viewmodel.soldier_list_viewmodel import SoldierListViewModel
@@ -28,8 +36,9 @@ class MainActivity(QMainWindow):
         self.__init_ui()
         self.__init_client()
         self.__init_viewmodel()
-        self.__update_list_items(self.main_client.get_soldier_data())
+        self.__update_soldier_list()
         self.__draw_exit_button()
+        self.__start_letter_scheduler()
         self.show()
 
     def __init_ui(self):
@@ -48,10 +57,10 @@ class MainActivity(QMainWindow):
         self.solder_list_viewmodel.solder_list.observe(self.__on_soldier_list_changed)
 
     def __on_soldier_list_changed(self, soldier_list):
-        print(soldier_list)
+        self.__update_list_items(soldier_list)
 
     def __update_soldier_list(self):
-        self.solder_list_viewmodel.solder_list = self.main_client.get_soldier_data()
+        self.solder_list_viewmodel.solder_list.value = self.main_client.get_soldier_data()
 
     def __init_list_view(self):
         self.list_widget = QListWidget(self)
@@ -79,21 +88,13 @@ class MainActivity(QMainWindow):
         self.exit_button.mousePressEvent = lambda _: self.__fade_out_exit()
 
     def __update_list_items(self, soldier_data):
+        self.__fetch_soldier_db(soldier_data)
         soldier_list = []
-        if soldier_data is None:
-            soldier_list = [
-                SoldierCard(self, '3', '우지은'),
-                SoldierCard(self, '13', '류성희'),
-                SoldierCard(self, '23', '신용준'),
-                SoldierCard(self, '33', '윤상원'),
-                SoldierCard(self, '43', '김민수'),
-            ]
-        else:
-            for soldier in soldier_data:
-                date_diff = datetime.now() - soldier.entrance_date
-                print(soldier.complete_date, soldier.entrance_date, date_diff)
-                soldier_list.append(SoldierCard(self, str(date_diff.days), soldier.name))
-        soldier_list.append(AddActionCard(self))
+        for soldier in soldier_data:
+            if not soldier.is_cafe_entranced:
+                continue
+            soldier_list.append(SoldierCard(self, soldier, self.on_click_soldier_card))
+        soldier_list.append(AddActionCard(self, lambda: self.on_click_add_soldier_card()))
 
         self.list_widget.clear()
         for soldier_item in soldier_list:
@@ -101,6 +102,14 @@ class MainActivity(QMainWindow):
             self.list_widget.addItem(list_item)
             self.list_widget.setItemWidget(list_item, soldier_item)
             list_item.setSizeHint(soldier_item.sizeHint())
+
+    def __fetch_soldier_db(self, soldier_list):
+        soldier_db = DatabaseRepository.get_instance().soldier_letter_database
+        soldier_letter_info_list = soldier_db.get_all_infos()
+        edu_seq_list_in_db = [soldier.edu_seq for soldier in soldier_letter_info_list]
+        for soldier in soldier_list:
+            if soldier.edu_seq not in edu_seq_list_in_db:
+                soldier_db.add_soldier(soldier)
 
     #     time.sleep(300)
     #
@@ -129,9 +138,65 @@ class MainActivity(QMainWindow):
         self.title.resize(self.WINDOW_WIDTH, 100)
         self.title.setStyleSheet('Color: {}'.format(resources.color_primary))
 
+    def __update_soldier_news_choice(self, letter_info, news_choice):
+        soldier_letter_db = DatabaseRepository.get_instance().soldier_letter_database
+        letter_info.letter_news_category = news_choice
+        soldier_letter_db.update_soldier_letter_info(letter_info)
+
+    def __on_done_adding_soldier(self):
+        # 프로그램이 아예 멈추지 않게 하기 위해 쓰레드로 넘겨야 함
+        # 시간상의 문제로 일단 이렇게 처리
+        time.sleep(1)
+        self.__update_soldier_list()
+
+    def __start_letter_scheduler(self):
+        scheduler = ScheduleManager.get_instance()
+        scheduler.set_schedule("13:00")
+        scheduler.add_job(self.__send_letter)
+        scheduler.run()
+
+    def __create_letter_content(self, news_choice: NewsChoice):
+        content = ''
+        if news_choice.get_politic_flag():
+            content += '\n\n' + get_naver_news_titles(NaverNewsType.POLITIC)
+        if news_choice.get_economy_flag():
+            content += '\n\n' + get_naver_news_titles(NaverNewsType.ECONOMY)
+        if news_choice.get_society_flag():
+            content += '\n\n' + get_naver_news_titles(NaverNewsType.SOCIETY)
+        if news_choice.get_world_flag():
+            content += '\n\n' + get_naver_news_titles(NaverNewsType.WORLD)
+        if news_choice.get_itscience_flag():
+            content += '\n\n' + get_naver_news_titles(NaverNewsType.ITSCIENCE)
+        if news_choice.get_lifeculture_flag():
+            content += '\n\n' + get_naver_news_titles(NaverNewsType.LIFECULTURE)
+        return content
+
+    def __send_letter(self):
+        soldier_letter_db = DatabaseRepository.get_instance().soldier_letter_database
+        soldier_list = self.solder_list_viewmodel.solder_list.value
+        for soldier in soldier_list:
+            letter_info = soldier_letter_db.get_soldier_letter_info(soldier)
+            if letter_info.letter_news_category.to_int_value() == 0:
+                return
+            content = self.__create_letter_content(letter_info.letter_news_category)
+            self.main_client.send_letter(soldier.name, "오늘의 뉴스", content)
+
     def __fade_out_exit(self):
         for i in range(50):
             i = i / 50
             self.setWindowOpacity(1 - i)
             time.sleep(0.005)
         exit()
+
+    def on_click_soldier_card(self, soldier: Soldier):
+        date_diff = soldier.complete_date - datetime.today()
+        letter_info = DatabaseRepository.get_instance().soldier_letter_database.get_soldier_letter_info(soldier)
+        dialog = SoldierInfoDialog(self, soldier.name, date_diff.days, letter_info,
+                                   lambda letter_choice: self.__update_soldier_news_choice(letter_info, letter_choice))
+        dialog.setModal(True)
+        dialog.exec()
+
+    def on_click_add_soldier_card(self):
+        dialog = AddSoldierDialog(self, lambda: self.__on_done_adding_soldier())
+        dialog.setModal(True)
+        dialog.exec()

@@ -1,4 +1,6 @@
 import time
+from threading import Timer
+
 import schedule
 
 
@@ -34,8 +36,8 @@ class ScheduleManager:
         self.__scheduler.every().friday.at(time_).do(self.__run_job)
 
     def run(self):
+        Timer(60, self.run).start()
         self.__scheduler.run_pending()
-        time.sleep(60)
 
     def __run_job(self):
         for job in self.__job_queue:

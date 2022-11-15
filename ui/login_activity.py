@@ -72,7 +72,7 @@ class LoginActivity(QMainWindow):
         pw = self.pw_input.text()
         
         login_client = LoginClient()
-        session = login_client.login('wjieun@kakao.com', 'alice0103!')
+        session = login_client.login(user_id, pw)
         if session is not None:
             TheCampSessionManager().get_instance().set_session(session)
             main = MainActivity()

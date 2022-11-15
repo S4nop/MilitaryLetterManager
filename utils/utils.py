@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QDesktopWidget
 
 def split_content_if_needed(content):
     lines = content.split('\n')
-    if content.len <= 1450 and len(lines) < 25:
+    if len(content) <= 1450 and len(lines) < 25:
         return [content]
     else:
         result = []

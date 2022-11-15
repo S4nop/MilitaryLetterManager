@@ -13,7 +13,7 @@ class SoldierLetterDatabaseManager:
     def __init__(self, key=None):
         if key == self.__create_key:
             assert("Do not create SoldierLetterDatabaseManager instance directly. Use DatabaseRepository.solder_database instead.")
-        self.connection = sqlite3.connect(self.__db_path)
+        self.connection = sqlite3.connect(self.__db_path, check_same_thread=False)
         self.cursor = self.connection.cursor()
         self.__create_soldier_letter_database()
 
@@ -36,6 +36,12 @@ class SoldierLetterDatabaseManager:
 
     def remove_soldier(self, soldier: Soldier):
         self.cursor.execute('''DELETE FROM soldier_letter WHERE edu_seq=?''', (soldier.edu_seq,))
+        self.connection.commit()
+
+    def update_soldier_letter_info(self, soldier_letter_info: SoldierLetterInfo):
+        self.cursor.execute('''UPDATE soldier_letter SET last_sent_date=?, letter_count=?, news_choice_status=?
+            WHERE edu_seq=?''', (soldier_letter_info.last_sent_date, soldier_letter_info.letter_count,
+                                 soldier_letter_info.letter_news_category.to_int_value(), soldier_letter_info.edu_seq))
         self.connection.commit()
 
     def update_message_choice(self, soldier: Soldier, news_choice_status: int):
