@@ -1,4 +1,3 @@
-import time
 from threading import Timer
 
 import schedule
@@ -10,6 +9,7 @@ class ScheduleManager:
 
     __job_queue = []
     __scheduler: schedule
+    __current_waiting_thread = None
 
     def __init__(self, key=None):
         if key == self.__create_key:
@@ -36,8 +36,12 @@ class ScheduleManager:
         self.__scheduler.every().friday.at(time_).do(self.__run_job)
 
     def run(self):
-        Timer(60, self.run).start()
+        self.__current_waiting_thread = Timer(60, self.run)
+        self.__current_waiting_thread.start()
         self.__scheduler.run_pending()
+
+    def kill(self):
+        self.__current_waiting_thread.cancel()
 
     def __run_job(self):
         for job in self.__job_queue:

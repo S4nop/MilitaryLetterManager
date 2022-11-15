@@ -182,11 +182,12 @@ class MainActivity(QMainWindow):
             self.main_client.send_letter(soldier.name, "오늘의 뉴스", content)
 
     def __fade_out_exit(self):
+        ScheduleManager.get_instance().kill()
         for i in range(50):
             i = i / 50
             self.setWindowOpacity(1 - i)
             time.sleep(0.005)
-        exit()
+        exit(0)
 
     def on_click_soldier_card(self, soldier: Soldier):
         date_diff = soldier.complete_date - datetime.today()
