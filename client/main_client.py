@@ -191,10 +191,10 @@ class MainClient(TheCampClient):
         self._post(endpoint, data)
 
     def __get_reg_order(self):
-        endpoint = '/missSoldier/viewMissSoldierRegList.do'
+        endpoint = '/main/viewWebMain.do'
         result = self._post(endpoint, {})
         soup = BeautifulSoup(result, 'html.parser')
-        return len(soup.select('.profile-info-list'))
+        return soup.select(".btn-main-center")[-1].select("a")[0].get('href').split('\'')[1]
 
     # birth/enter_date format: YYYYMMDD
     def join_cafe(self, name, birth, enter_date):

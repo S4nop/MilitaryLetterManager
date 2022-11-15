@@ -108,6 +108,8 @@ class MainActivity(QMainWindow):
         soldier_letter_info_list = soldier_db.get_all_infos()
         edu_seq_list_in_db = [soldier.edu_seq for soldier in soldier_letter_info_list]
         for soldier in soldier_list:
+            if not soldier.is_cafe_entranced:
+                continue
             if soldier.edu_seq not in edu_seq_list_in_db:
                 soldier_db.add_soldier(soldier)
 
