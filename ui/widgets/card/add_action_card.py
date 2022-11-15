@@ -3,7 +3,6 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QLabel
 
 from res import resources
-from ui.add_soldier_dialog import AddSoldierDialog
 from ui.widgets.card.card_view import CardView
 
 
@@ -17,6 +16,4 @@ class AddActionCard(CardView):
         self.add_img.move(0, 80)
 
     def on_click(self):
-        dialog = AddSoldierDialog(self._parent)
-        dialog.setModal(True)
-        dialog.exec()
+        pass

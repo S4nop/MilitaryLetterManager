@@ -3,7 +3,6 @@ from PyQt5.QtGui import QFont, QPixmap
 from PyQt5.QtWidgets import QLabel
 
 from res import resources
-from ui.soldier_info_dialog import SoldierInfoDialog
 from ui.widgets.card.card_view import CardView
 
 
@@ -11,10 +10,10 @@ class SoldierCard(CardView):
     left_date: str
     soldier_name: str
 
-    def __init__(self, parent, left_date: str, soldier_name: str):
+    def __init__(self, parent, left_date: str, soldier_name: str, on_click):
         self.left_date = left_date
         self.soldier_name = soldier_name
-        super().__init__(parent)
+        super().__init__(parent, on_click)
 
     def _init_foreground(self):
         self.army_title = QLabel("육군", self)
@@ -49,5 +48,4 @@ class SoldierCard(CardView):
                                               .format(resources.color_soldier_card_text))
 
     def on_click(self):
-        dialog = SoldierInfoDialog(self._parent)
-        dialog.show()
+        pass

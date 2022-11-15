@@ -12,10 +12,12 @@ class CardView(QWidget):
     WIDTH_SIZE = 201
 
     _parent = None
+    on_click = None
 
-    def __init__(self, parent):
+    def __init__(self, parent, on_click):
         super(CardView, self).__init__(parent)
         self._parent = parent
+        self.on_click = on_click
         self.__init_background()
         self._init_foreground()
         self.show()
@@ -35,8 +37,4 @@ class CardView(QWidget):
 
     @abstractmethod
     def _init_foreground(self):
-        raise NotImplementedError("This method must be implemented")
-
-    @abstractmethod
-    def on_click(self):
         raise NotImplementedError("This method must be implemented")
