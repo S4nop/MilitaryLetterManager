@@ -15,9 +15,10 @@ class AddSoldierDialog(QDialog):
     DIALOG_WIDTH = 400
     DIALOG_HEIGHT = 250
 
-    def __init__(self, parent):
+    def __init__(self, parent, on_closed):
         super().__init__(parent, Qt.WindowFlags(Qt.FramelessWindowHint))
         self.__init_ui()
+        self.on_closed = on_closed
         self.show()
 
     def __init_ui(self):
@@ -83,6 +84,7 @@ class AddSoldierDialog(QDialog):
         self.close_button.mouseReleaseEvent = lambda _: self.on_click_close()
 
     def on_click_close(self):
+        self.on_closed()
         self.close()
 
     def add_soldier(self):
@@ -94,5 +96,6 @@ class AddSoldierDialog(QDialog):
         main_client = MainClient(session)
         main_client.add_train_unit(name, birth, enter_date)
         main_client.join_cafe(name, birth.replace('-', ''), enter_date.replace('-', ''))
-        
+
+        self.on_closed()
         self.close()
