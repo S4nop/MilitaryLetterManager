@@ -1,18 +1,18 @@
 from database.setting_database_manager import SettingDatabaseManager
-from database.soldier_database_manager import SoldierDatabaseManager
+from database.soldier_database_manager import SoldierLetterDatabaseManager
 
 
 class DatabaseRepository:
     __instance = None
     __create_key = object()
 
-    soldier_database: SoldierDatabaseManager
+    soldier_letter_database: SoldierLetterDatabaseManager
     setting_database: SettingDatabaseManager
 
     def __init__(self, key=None):
         if key == self.__create_key:
             assert("Do not create DatabaseRepository instance directly. Use DatabaseRepository.get_instance() instead.")
-        self.soldier_database = SoldierDatabaseManager.get_instance()
+        self.soldier_letter_database = SoldierLetterDatabaseManager.get_instance()
         self.setting_database = SettingDatabaseManager.get_instance()
 
     @classmethod

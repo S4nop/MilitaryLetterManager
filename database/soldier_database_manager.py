@@ -1,52 +1,62 @@
 import sqlite3
 
 from data.soldier import Soldier
+from data.soldier_letter_info import SoldierLetterInfo
 
 
-class SoldierDatabaseManager:
+class SoldierLetterDatabaseManager:
     __instance = None
     __create_key = object()
 
-    __db_path = "soldier.db"
+    __db_path = "soldier_letter.db"
 
     def __init__(self, key=None):
         if key == self.__create_key:
-            assert("Do not create SoldierDatabaseManager instance directly. Use DatabaseRepository.solder_database instead.")
+            assert("Do not create SoldierLetterDatabaseManager instance directly. Use DatabaseRepository.solder_database instead.")
         self.connection = sqlite3.connect(self.__db_path)
         self.cursor = self.connection.cursor()
+        self.__create_soldier_letter_database()
 
     @classmethod
     def get_instance(cls):
-        if SoldierDatabaseManager.__instance is None:
-            SoldierDatabaseManager.__instance = SoldierDatabaseManager(cls.__create_key)
-        return SoldierDatabaseManager.__instance
+        if SoldierLetterDatabaseManager.__instance is None:
+            SoldierLetterDatabaseManager.__instance = SoldierLetterDatabaseManager(cls.__create_key)
+        return SoldierLetterDatabaseManager.__instance
 
-    def __create_soldier_database(self):
-        self.cursor.execute('''CREATE TABLE IF NOT EXISTS soldiers
-            (edu_seq TEXT PRIMARY KEY, name TEXT NOT NULL, news_choice_status INTEGER NOT NULL DEFAULT 0)''')
+    def __create_soldier_letter_database(self):
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS soldier_letter
+            (edu_seq TEXT PRIMARY KEY, last_sent_date TEXT NOT NULL, 
+            letter_count INTEGER NOT NULL DEFAULT 0, news_choice_status INTEGER NOT NULL DEFAULT 0)''')
         self.connection.commit()
 
     def add_soldier(self, soldier: Soldier):
-        self.cursor.execute('''INSERT INTO soldiers(edu_seq, name, news_choice_status)
-            VALUES(?, ?, ?)''', (soldier.edu_seq, soldier.name, 0))
+        self.cursor.execute('''INSERT INTO soldier_letter(edu_seq, last_sent_date, letter_count, news_choice_status)
+            VALUES(?, ?, ?, ?)''', (soldier.edu_seq, "-", 0, 0))
         self.connection.commit()
 
     def remove_soldier(self, soldier: Soldier):
-        self.cursor.execute('''DELETE FROM soldiers WHERE edu_seq=?''', (soldier.edu_seq,))
+        self.cursor.execute('''DELETE FROM soldier_letter WHERE edu_seq=?''', (soldier.edu_seq,))
         self.connection.commit()
 
     def update_message_choice(self, soldier: Soldier, news_choice_status: int):
-        self.cursor.execute('''UPDATE soldiers SET news_choice_status=? WHERE edu_seq=?''',
+        self.cursor.execute('''UPDATE soldier_letter SET news_choice_status=? WHERE edu_seq=?''',
                             (news_choice_status, soldier.edu_seq))
         self.connection.commit()
 
-    def get_soldiers(self):
-        self.cursor.execute('''SELECT * FROM soldiers''')
-        return self.cursor.fetchall()
+    def update_sent_letter_info(self, soldier: Soldier, last_sent_date: str, letter_count: int):
+        self.cursor.execute('''UPDATE soldier_letter SET last_sent_date=?, letter_count=? WHERE edu_seq=?''',
+                            (last_sent_date, letter_count, soldier.edu_seq))
+        self.connection.commit()
 
-    def get_soldier(self, soldier: Soldier):
-        self.cursor.execute('''SELECT * FROM soldiers WHERE edu_seq=?''', (soldier.edu_seq,))
-        return self.cursor.fetchone()
+    def get_all_infos(self):
+        self.cursor.execute('''SELECT * FROM soldier_letter''')
+        tuple_datas = self.cursor.fetchall()
+        return [SoldierLetterInfo(*tuple_data) for tuple_data in tuple_datas]
+
+    def get_soldier_letter_info(self, soldier: Soldier):
+        self.cursor.execute('''SELECT * FROM soldier_letter WHERE edu_seq=?''', (soldier.edu_seq,))
+        tuple_data = self.cursor.fetchone()
+        return SoldierLetterInfo(*tuple_data)
 
     def __del__(self):
         self.connection.close()
