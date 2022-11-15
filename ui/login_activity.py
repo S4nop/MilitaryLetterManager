@@ -2,11 +2,15 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import Qt 
 from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QMainWindow, QMessageBox
 
 from res import resources
+from ui.main_activity import MainActivity
 from ui.widgets.styled_button import StyledButton
+from ui.widgets.styled_text_field import StyledLineEdit
 from utils.utils import move_window_to_center
+from client.login_client import LoginClient
+from manager.thecamp_session_manager import TheCampSessionManager
 
 
 class LoginActivity(QMainWindow):
@@ -66,4 +70,13 @@ class LoginActivity(QMainWindow):
     def login(self):
         user_id = self.id_input.text()
         pw = self.pw_input.text()
-        self.close()
+        
+        login_client = LoginClient()
+        session = login_client.login('wjieun@kakao.com', 'alice0103!')
+        if session is not None:
+            TheCampSessionManager().get_instance().set_session(session)
+            main = MainActivity()
+            main.show()
+            self.close()
+        else:
+            QMessageBox.warning(self, "ERROR", "로그인 실패")

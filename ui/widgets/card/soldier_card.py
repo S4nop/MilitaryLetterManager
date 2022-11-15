@@ -3,6 +3,7 @@ from PyQt5.QtGui import QFont, QPixmap
 from PyQt5.QtWidgets import QLabel
 
 from res import resources
+from ui.soldier_info_dialog import SoldierInfoDialog
 from ui.widgets.card.card_view import CardView
 
 
@@ -48,4 +49,5 @@ class SoldierCard(CardView):
                                               .format(resources.color_soldier_card_text))
 
     def on_click(self):
-        pass
+        dialog = SoldierInfoDialog(self._parent)
+        dialog.show()
