@@ -4,6 +4,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QMainWindow, QMessageBox
 
+from helper.config_helper import ConfigHelper
 from res import resources
 from ui.main_activity import MainActivity
 from ui.widgets.styled_button import StyledButton
@@ -21,6 +22,7 @@ class LoginActivity(QMainWindow):
         super().__init__()
         self.__init_ui()
         self.show()
+        self.__check_has_auto_login_info()
 
     def __init_ui(self):
         self.setWindowTitle('Login')
@@ -55,7 +57,6 @@ class LoginActivity(QMainWindow):
         self.stay_login.move(50, 290)
         self.stay_login.setFont(QFont('Roboto', 10))
         self.stay_login.setStyleSheet('QCheckBox { background-color: rgba(0, 0, 0, 0); Color: #575757; } ')
-        self.stay_login.stateChanged.connect(self.__on_stay_login_state_changed)
 
         self.close_button = QLabel(self)
         self.close_button.setPixmap(QPixmap(resources.img_close))
@@ -64,8 +65,13 @@ class LoginActivity(QMainWindow):
         self.close_button.move(360, 10)
         self.close_button.mouseReleaseEvent = self.close
 
-    def __on_stay_login_state_changed(self):
-        print(self.stay_login.isChecked())
+    def __check_has_auto_login_info(self):
+        is_auto_login, user_id, pw = ConfigHelper.get_auto_login_info()
+        if is_auto_login is not None:
+            self.id_input.setText(user_id)
+            self.pw_input.setText(pw)
+            self.stay_login.setChecked(is_auto_login)
+            self.login()
 
     def login(self):
         user_id = self.id_input.text()
@@ -74,6 +80,11 @@ class LoginActivity(QMainWindow):
         login_client = LoginClient()
         session = login_client.login(user_id, pw)
         if session is not None:
+            if self.stay_login.isChecked():
+                ConfigHelper.set_auto_login(user_id, pw)
+            else:
+                ConfigHelper.unset_auto_login()
+
             TheCampSessionManager().get_instance().set_session(session)
             main = MainActivity()
             main.show()

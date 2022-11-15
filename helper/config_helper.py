@@ -1,3 +1,4 @@
+import os
 from configparser import ConfigParser
 
 from utils.crypto_utils import encrypt, decrypt
@@ -6,6 +7,8 @@ from utils.crypto_utils import encrypt, decrypt
 class ConfigHelper:
     @staticmethod
     def create_config_file():
+        if os.path.isfile('config.ini'):
+            return
         ConfigHelper.unset_auto_login()
 
     @staticmethod
