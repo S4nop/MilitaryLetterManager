@@ -104,7 +104,7 @@ class MainClient(TheCampClient):
                     regex = re.compile('\'\d+\'')
                     codes = regex.findall(button['href'])
 
-                    edu_seq, train_unit_code = map(lambda x: int(x[1:-1]), codes)
+                    edu_seq, train_unit_code = map(lambda x: x[1:-1], codes)
                     break
 
             solder_data.append(Soldier(name, entrance_day, complete_day, edu_seq, train_unit_code))
