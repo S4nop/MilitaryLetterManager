@@ -43,3 +43,9 @@ class NewsChoice:
 
     def get_itscience_flag(self):
         return self.__choice_status & (1 << 5)
+
+    @staticmethod
+    def from_int_value(choice_status: int):
+        news_choice = NewsChoice()
+        news_choice.__choice_status = choice_status
+        return news_choice
