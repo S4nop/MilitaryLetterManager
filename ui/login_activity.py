@@ -67,7 +67,7 @@ class LoginActivity(QMainWindow):
 
     def __check_has_auto_login_info(self):
         is_auto_login, user_id, pw = ConfigHelper.get_auto_login_info()
-        if is_auto_login is not None:
+        if is_auto_login:
             self.id_input.setText(user_id)
             self.pw_input.setText(pw)
             self.stay_login.setChecked(is_auto_login)

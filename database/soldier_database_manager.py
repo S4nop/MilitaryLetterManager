@@ -62,6 +62,8 @@ class SoldierLetterDatabaseManager:
     def get_soldier_letter_info(self, soldier: Soldier):
         self.cursor.execute('''SELECT * FROM soldier_letter WHERE edu_seq=?''', (soldier.edu_seq,))
         tuple_data = self.cursor.fetchone()
+        if tuple_data is None:
+            return None
         return SoldierLetterInfo(*tuple_data)
 
     def __del__(self):

@@ -180,8 +180,8 @@ class MainActivity(QMainWindow):
         soldier_list = self.solder_list_viewmodel.solder_list.value
         for soldier in soldier_list:
             letter_info = soldier_letter_db.get_soldier_letter_info(soldier)
-            if letter_info.letter_news_category.to_int_value() == 0:
-                return
+            if letter_info is None or letter_info.letter_news_category.to_int_value() == 0:
+                continue
             content = self.__create_letter_content(letter_info.letter_news_category)
             self.main_client.send_letter(soldier.name, "오늘의 뉴스", content)
         self.tray_icon.notification('편지 전송 완료')
