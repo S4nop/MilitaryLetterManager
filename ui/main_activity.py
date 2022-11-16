@@ -11,6 +11,7 @@ from data.news_choice import NewsChoice
 from data.soldier import Soldier
 from database.database_repository import DatabaseRepository
 from helper.news_crawl_helper import NaverNewsType, get_naver_news_titles
+from helper.tray_helper import TrayHelper
 from manager.schedule_manager import ScheduleManager
 from manager.thecamp_session_manager import TheCampSessionManager
 from res import resources
@@ -36,7 +37,9 @@ class MainActivity(QMainWindow):
         self.__init_viewmodel()
         self.__update_soldier_list()
         self.__draw_exit_button()
+        self.__draw_tray_button()
         self.__start_letter_scheduler()
+        self.__set_tray_icon()
         self.show()
 
     def __init_ui(self):
@@ -84,6 +87,13 @@ class MainActivity(QMainWindow):
         self.exit_button.move(1080, 480)
         self.exit_button.resize(150, 150)
         self.exit_button.mousePressEvent = lambda _: self.__fade_out_exit()
+
+    def __draw_tray_button(self):
+        self.tray_button = QLabel(self)
+        self.tray_button.setPixmap(QPixmap(resources.img_to_tray))
+        self.tray_button.move(960, 480)
+        self.tray_button.resize(150, 150)
+        self.tray_button.mousePressEvent = lambda _: self.__move_to_tray()
 
     def __update_list_items(self, soldier_data):
         self.__fetch_soldier_db(soldier_data)
@@ -172,8 +182,23 @@ class MainActivity(QMainWindow):
                 return
             content = self.__create_letter_content(letter_info.letter_news_category)
             self.main_client.send_letter(soldier.name, "오늘의 뉴스", content)
+        self.tray_icon.notification('편지 전송 완료')
+
+    def __set_tray_icon(self):
+        self.tray_icon = TrayHelper('MilitaryLetter', 'TheCamp Letter Helper')\
+            .set_icon(resources.logo)\
+            .add_menu('열기', self.__restore_from_tray, is_onclick=True)\
+            .add_menu('종료', lambda: self.__fade_out_exit())
+        self.tray_icon.run()
+
+    def __restore_from_tray(self):
+        self.show()
+
+    def __move_to_tray(self):
+        self.hide()
 
     def __fade_out_exit(self):
+        self.tray_icon.stop()
         ScheduleManager.get_instance().kill()
         for i in range(50):
             i = i / 50
