@@ -1,10 +1,9 @@
 import time
-import threading
 from datetime import datetime
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QPixmap
-from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QLabel, QListWidget, QListView, QListWidgetItem, \
+from PyQt5.QtWidgets import QMainWindow, QLabel, QListWidget, QListView, QListWidgetItem, \
     QAbstractItemView
 
 from client.main_client import MainClient
@@ -18,7 +17,6 @@ from res import resources
 from ui.add_soldier_dialog import AddSoldierDialog
 from ui.soldier_info_dialog import SoldierInfoDialog
 from ui.widgets.card.add_action_card import AddActionCard
-from ui.widgets.card.card_view import CardView
 from ui.widgets.card.soldier_card import SoldierCard
 from utils.utils import move_window_to_center
 from viewmodel.soldier_list_viewmodel import SoldierListViewModel
@@ -112,14 +110,6 @@ class MainActivity(QMainWindow):
                 continue
             if soldier.edu_seq not in edu_seq_list_in_db:
                 soldier_db.add_soldier(soldier)
-
-    #     time.sleep(300)
-    #
-    # def __update_thread(self):
-    #     soldier_data = self.main_client.get_soldier_data()
-    #     thread = threading.Thread(target=self.__update_list_items(soldier_data))
-    #     thread.daemon = True
-    #     thread.start()
 
     def __init_background(self):
         self.bg_top = QLabel(self)

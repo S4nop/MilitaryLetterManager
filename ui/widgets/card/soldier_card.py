@@ -51,6 +51,3 @@ class SoldierCard(CardView):
 
     def __calc_left_day(self):
         return str((self.soldier.complete_date - datetime.today()).days)
-
-    def on_click(self):
-        pass

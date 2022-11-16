@@ -14,6 +14,3 @@ class AddActionCard(CardView):
         self.add_img.resize(self.WIDTH_SIZE, 120)
         self.add_img.setStyleSheet('background-color: rgba(0, 0, 0, 0)')
         self.add_img.move(0, 80)
-
-    def on_click(self):
-        pass
