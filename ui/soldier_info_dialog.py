@@ -142,6 +142,9 @@ class SoldierInfoDialog(QDialog):
         self.worlds = QCheckBox("세계", self.bg_bottom)
         self.worlds.setStyleSheet('background-color: rgba(0, 0, 0, 0); Color: #3d3d3d;')
         self.worlds.setChecked(letter_category_choice.get_world_flag() == 1)
+        self.world_football = QCheckBox("해외축구", self.bg_bottom)
+        self.world_football.setStyleSheet('background-color: rgba(0, 0, 0, 0); Color: #3d3d3d;')
+        self.world_football.setChecked(letter_category_choice.get_world_football_flag() == 1)
 
         layout_bottom = QGridLayout(self.bg_bottom)
         layout_bottom.addWidget(self.politics, 1, 0)
@@ -150,6 +153,7 @@ class SoldierInfoDialog(QDialog):
         layout_bottom.addWidget(self.culture, 2, 1)
         layout_bottom.addWidget(self.it_science, 3, 0)
         layout_bottom.addWidget(self.worlds, 3, 1)
+        layout_bottom.addWidget(self.world_football, 4, 0)
         layout_bottom.setAlignment(Qt.AlignTop)
         layout_bottom.setContentsMargins(20, 60, 20, 20)
         layout_bottom.setSpacing(12)
@@ -168,6 +172,8 @@ class SoldierInfoDialog(QDialog):
             news_choice.set_lifeculture_flag()
         if self.it_science.isChecked():
             news_choice.set_itscience_flag()
+        if self.world_football.isChecked():
+            news_choice.set_world_football_flag()
 
         self.on_closed(news_choice)
         self.close()

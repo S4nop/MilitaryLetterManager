@@ -44,6 +44,12 @@ class NewsChoice:
     def get_itscience_flag(self):
         return self.__choice_status & (1 << 5) > 0
 
+    def set_world_football_flag(self):
+        self.__choice_status |= (1 << 6)
+
+    def get_world_football_flag(self):
+        return self.__choice_status & (1 << 6) > 0
+
     def to_int_value(self):
         return self.__choice_status
 

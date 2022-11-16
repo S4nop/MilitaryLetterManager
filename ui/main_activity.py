@@ -10,7 +10,7 @@ from client.main_client import MainClient
 from data.news_choice import NewsChoice
 from data.soldier import Soldier
 from database.database_repository import DatabaseRepository
-from helper.news_crawl_helper import NaverNewsType, get_naver_news_titles
+from helper.news_crawl_helper import NaverNewsType, get_naver_news_titles, get_world_football_news_titles
 from helper.tray_helper import TrayHelper
 from manager.schedule_manager import ScheduleManager
 from manager.thecamp_session_manager import TheCampSessionManager
@@ -171,6 +171,8 @@ class MainActivity(QMainWindow):
             content += '\n\n' + get_naver_news_titles(NaverNewsType.ITSCIENCE)
         if news_choice.get_lifeculture_flag():
             content += '\n\n' + get_naver_news_titles(NaverNewsType.LIFECULTURE)
+        if news_choice.get_world_football_flag():
+            content += '\n\n' + get_world_football_news_titles()
         return content
 
     def __send_letter(self):
