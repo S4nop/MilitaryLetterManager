@@ -49,7 +49,7 @@ class LoginActivity(QMainWindow):
 
         self.login_button = StyledButton(self)
         self.login_button.set_text('Login')
-        self.login_button.set_on_click(self.login)
+        self.login_button.set_on_click(self.__login)
         self.login_button.resize(300, 44)
         self.login_button.move(50, 250)
 
@@ -71,7 +71,7 @@ class LoginActivity(QMainWindow):
             self.id_input.setText(user_id)
             self.pw_input.setText(pw)
             self.stay_login.setChecked(is_auto_login)
-            self.login()
+            self.__login()
 
     def login(self):
         user_id = self.id_input.text()
@@ -91,3 +91,7 @@ class LoginActivity(QMainWindow):
             self.close()
         else:
             QMessageBox.warning(self, "ERROR", "로그인 실패")
+
+    def keyPressEvent(self, a0: QKeyEvent) -> None:
+        if a0.key() == Qt.Key_Return:
+            self.__login()
