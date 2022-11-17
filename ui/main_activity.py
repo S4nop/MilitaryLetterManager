@@ -84,15 +84,15 @@ class MainActivity(QMainWindow):
     def __draw_exit_button(self):
         self.exit_button = QLabel(self)
         self.exit_button.setPixmap(QPixmap(resources.img_exit))
-        self.exit_button.move(1080, 480)
-        self.exit_button.resize(150, 150)
+        self.exit_button.move(1080, 505)
+        self.exit_button.resize(100, 100)
         self.exit_button.mousePressEvent = lambda _: self.__fade_out_exit()
 
     def __draw_tray_button(self):
         self.tray_button = QLabel(self)
         self.tray_button.setPixmap(QPixmap(resources.img_to_tray))
-        self.tray_button.move(960, 480)
-        self.tray_button.resize(150, 150)
+        self.tray_button.move(960, 505)
+        self.tray_button.resize(100, 100)
         self.tray_button.mousePressEvent = lambda _: self.__move_to_tray()
 
     def __update_list_items(self, soldier_data):
