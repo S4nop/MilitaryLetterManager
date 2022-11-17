@@ -172,7 +172,7 @@ class MainClient(TheCampClient):
         return soup.select('#mainForm input')[0].get('value')
 
     # birth/enter_date format: YYYY-MM-DD
-    def add_train_unit(self, name, birth, enter_date):
+    def add_train_unit(self, name, birth, belonging_code, enter_date):
         endpoint = '/missSoldier/insertDirectMissSoldierA.do'
         iuid = self.__get_iuid()
         data = {
@@ -183,7 +183,7 @@ class MainClient(TheCampClient):
             'grpCd': '0000010001',
             'name': name,
             'birth': birth,
-            'trainUnitCd': '20020191700',
+            'trainUnitCd': belonging_code,
             'enterDate': enter_date,
             'missSoldierRelationshipCd': '0000420006',
             'countryCode': '39|+82',
