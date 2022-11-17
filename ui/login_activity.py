@@ -73,7 +73,7 @@ class LoginActivity(QMainWindow):
             self.stay_login.setChecked(is_auto_login)
             self.__login()
 
-    def login(self):
+    def __login(self):
         user_id = self.id_input.text()
         pw = self.pw_input.text()
         
