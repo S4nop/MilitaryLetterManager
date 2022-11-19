@@ -1,3 +1,4 @@
+altgraph==0.17.3
 beautifulsoup4==4.11.1
 brotlipy==0.7.0
 bs4==0.0.1
@@ -5,16 +6,32 @@ certifi @ file:///C:/b/abs_4f5wo627a3/croots/recipe/certifi_1663615677642/work/c
 cffi @ file:///C:/Windows/Temp/abs_6808y9x40v/croots/recipe/cffi_1659598653989/work
 charset-normalizer @ file:///tmp/build/80754af9/charset-normalizer_1630003229654/work
 cryptography @ file:///C:/ci/cryptography_1652083563162/work
+cx-Freeze==6.13.1
+cx-Logging==3.1.0
+future==0.18.2
 idna @ file:///tmp/build/80754af9/idna_1637925883363/work
+importlib-metadata==5.0.0
+lief==0.12.3
+packaging==21.3
+pefile==2022.5.30
+Pillow==9.3.0
 pycparser @ file:///tmp/build/80754af9/pycparser_1636541352034/work
+pycryptodome==3.15.0
+pyinstaller==5.6.2
+pyinstaller-hooks-contrib==2022.13
 pyOpenSSL @ file:///opt/conda/conda-bld/pyopenssl_1643788558760/work
+pyparsing==3.0.9
 PyQt5==5.15.7
 PyQt5-Qt5==5.15.2
 PyQt5-sip==12.11.0
 PySocks @ file:///C:/ci/pysocks_1605307512533/work
+pystray==0.19.4
+pywin32-ctypes==0.2.0
+requests @ file:///C:/ci/requests_1657735342357/work
 schedule==1.1.0
+six==1.16.0
 soupsieve==2.3.2.post1
 urllib3 @ file:///C:/Windows/TEMP/abs_65ynz4fdmi/croots/recipe/urllib3_1659110473919/work
 win-inet-pton @ file:///C:/ci/win_inet_pton_1605306162074/work
 wincertstore==0.2
-requests~=2.28.1
+zipp==3.10.0
