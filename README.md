@@ -37,8 +37,11 @@ sqlite3
 
 ##### 2. Data Package
 프로그램의 구현에 필요한 다양한 데이터 구조체입니다.
+
 `LiveData`는 다른 구조체들과 결이 조금 다른데, data package 외에 마땅히 넣을 곳이 없어 그냥 넣어두었습니다.
+
 *LiveData 클래스는 안드로이드의 LiveData에서 이름을 따 왔으나, 단순 Observable 오브젝트입니다*
+
 *그냥 익숙한 이름으로 빠르게 개발하려고 대충 붙였습니다 ;ㅅ;*
 
 ##### 3. Database Package
@@ -54,7 +57,9 @@ DB 매니저와 레포지토리를 관리하는 패키지입니다.
 ##### 6. UI Package
 레이아웃 구현체를 모아 놓은 패키지입니다.
 내부 패키지로 `widgets`, `widgets/card` 패키지가 존재합니다.
+
 `widgets package` : 레이아웃 구현에 필요한 각종 widget들을 구현해 둔 패키지
+
 `widgets/card package` : widget 중 메인 화면에서 사용될 다양한 카드뷰를 구현해 둔 패키지
 
 ##### 7. Utils package
